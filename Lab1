@@ -32,7 +32,7 @@ double time_clock(double x, unsigned long long n, int count) {
 }
 
 int main() {
-    double x;
+   double x;
     unsigned long long n;
     if (scanf("%lf %llu", &x, &n) != 2) {
         return 1;
@@ -40,22 +40,21 @@ int main() {
 
     int counts = 1;
     double prev_avg_time = 0, cur_avg_time = 0, pogreshnost = 1;
+     cur_avg_time = time_clock(x, n, counts);
+     printf("Counts of tries: %d\n Time: %f\n", counts, cur_avg_time);
+     printf("Answer: %Lf\n\n", priblizhenie(x, n));
 
-    while (pogreshnost > 0.01) {
+     prev_avg_time=cur_avg_time;
+     counts++;
+
+     while (abs(pogreshnost) > 0.01) {
         cur_avg_time = time_clock(x, n, counts);
 
-        if (prev_avg_time > 0) {
-            pogreshnost = (cur_avg_time - prev_avg_time) / prev_avg_time;
-            printf("Counts of tries: %d\n Time: %f\n Pog-st: %f\n", counts, cur_avg_time, pogreshnost * 100);
+        pogreshnost = (cur_avg_time - prev_avg_time) / prev_avg_time;
+        printf("Counts of tries: %d\n Time: %f\n Pog-st: %f\n", counts, cur_avg_time, pogreshnost * 100);
+        prev_avg_time=cur_avg_time;
+        counts++;
+        printf("Answer: %Lf\n\n", priblizhenie(x, n));
         }
-        else {
-            pogreshnost = 1;
-        }
-
-        prev_avg_time = cur_avg_time;
-        counts += 1;
-    }
-
-    printf("Answer: %Lf\n", priblizhenie(x, n));
-    return 0;
+return 0;
 }
