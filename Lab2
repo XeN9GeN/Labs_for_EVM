@@ -1,0 +1,60 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+#include <stdbool.h>
+#include <time.h>
+
+
+long double priblizhenie(double x, unsigned long long n) {
+    long double first_score = 1;
+    long double sum = first_score;
+
+    for (int i = 1; i <= n; i++) {
+        first_score *= (x / i);
+        sum += first_score;
+    }
+    return sum;
+}
+
+double time_clock(double x, unsigned long long n, int count) {
+    struct timespec start, end;
+    double time_of_prog = 0;
+
+    for (int i = 0; i < count; i++) {
+        clock_gettime(CLOCK_MONOTONIC_RAW, &start);
+        priblizhenie(x, n);
+        clock_gettime(CLOCK_MONOTONIC_RAW, &end);
+        time_of_prog += end.tv_sec - start.tv_sec + 0.000000001 * (end.tv_nsec - start.tv_nsec);
+    }
+
+    return time_of_prog / count;
+}
+
+int main() {
+   double x;
+    unsigned long long n;
+    if (scanf("%lf %llu", &x, &n) != 2) {
+        return 1;
+    }
+
+    int counts = 1;
+    double prev_avg_time = 0, cur_avg_time = 0, pogreshnost = 1;
+     cur_avg_time = time_clock(x, n, counts);
+     printf("Counts of tries: %d\n Time: %f\n", counts, cur_avg_time);
+     printf("Answer: %Lf\n\n", priblizhenie(x, n));
+
+     prev_avg_time=cur_avg_time;
+     counts++;
+
+     while (abs(pogreshnost) > 0.01) {
+        cur_avg_time = time_clock(x, n, counts);
+
+        pogreshnost = (cur_avg_time - prev_avg_time) / prev_avg_time;
+        printf("Counts of tries: %d\n Time: %f\n Pog-st: %f\n", counts, cur_avg_time, pogreshnost * 100);
+        prev_avg_time=cur_avg_time;
+        counts++;
+        printf("Answer: %Lf\n\n", priblizhenie(x, n));
+        }
+return 0;
+}
