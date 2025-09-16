@@ -21,7 +21,7 @@ double time_clock(double x, unsigned long long n) {
     struct timespec start, end;
     double time_of_prog = 0;
 
-   
+
     clock_gettime(CLOCK_MONOTONIC_RAW, &start);
     priblizhenie(x, n);
     clock_gettime(CLOCK_MONOTONIC_RAW, &end);
@@ -29,12 +29,11 @@ double time_clock(double x, unsigned long long n) {
 
     return time_of_prog;
 }
-
 int main() {
     double x;
     unsigned long long n;
-    int runs;
-    if (scanf("%lf %llu %d", &x, &n, &runs) != 3) {
+    unsigned long long runs;
+    if (scanf("%lf %llu %llu", &x, &n, &runs) != 3) {
         return 1;
     }
 
@@ -42,12 +41,18 @@ int main() {
     for (int i = 1; i <= runs; i++) {
         double time_of_run = time_clock(x, n);
         total_time += time_of_run;
-
-        printf("Run %d: %f\n", i, time_of_run);
     }
-    
-    printf("%Total: f\n", total_time);
+
+    long double delta_mid=0.000001/sqrt(runs);
+    long double eps=(delta_mid/(total_time/runs))*100;
+    printf("Total: %f\n", total_time);
     printf("Avg_time: %f\n", total_time / runs);
+    if(total_time==0){
+        printf("Pogreshnost: non");
+    }
+    else{
+        printf("Pogreshnost: %Lf\n",eps);
+    }
     printf("Answer: %Lf\n", priblizhenie(x, n));
     return 0;
 }
