@@ -17,44 +17,37 @@ long double priblizhenie(double x, unsigned long long n) {
     return sum;
 }
 
-double time_clock(double x, unsigned long long n, int count) {
+double time_clock(double x, unsigned long long n) {
     struct timespec start, end;
     double time_of_prog = 0;
 
-    for (int i = 0; i < count; i++) {
-        clock_gettime(CLOCK_MONOTONIC_RAW, &start);
-        priblizhenie(x, n);
-        clock_gettime(CLOCK_MONOTONIC_RAW, &end);
-        time_of_prog += end.tv_sec - start.tv_sec + 0.000000001 * (end.tv_nsec - start.tv_nsec);
-    }
+   
+    clock_gettime(CLOCK_MONOTONIC_RAW, &start);
+    priblizhenie(x, n);
+    clock_gettime(CLOCK_MONOTONIC_RAW, &end);
+    time_of_prog += end.tv_sec - start.tv_sec + 0.000000001 * (end.tv_nsec - start.tv_nsec);
 
-    return time_of_prog / count;
+    return time_of_prog;
 }
 
 int main() {
-   double x;
+    double x;
     unsigned long long n;
-    if (scanf("%lf %llu", &x, &n) != 2) {
+    int runs;
+    if (scanf("%lf %llu %d", &x, &n, &runs) != 3) {
         return 1;
     }
 
-    int counts = 1;
-    double prev_avg_time = 0, cur_avg_time = 0, pogreshnost = 1;
-     cur_avg_time = time_clock(x, n, counts);
-     printf("Counts of tries: %d\n Time: %f\n", counts, cur_avg_time);
-     printf("Answer: %Lf\n\n", priblizhenie(x, n));
+    double total_time = 0;
+    for (int i = 1; i <= runs; i++) {
+        double time_of_run = time_clock(x, n);
+        total_time += time_of_run;
 
-     prev_avg_time=cur_avg_time;
-     counts++;
-
-     while (abs(pogreshnost) > 0.01) {
-        cur_avg_time = time_clock(x, n, counts);
-
-        pogreshnost = (cur_avg_time - prev_avg_time) / prev_avg_time;
-        printf("Counts of tries: %d\n Time: %f\n Pog-st: %f\n", counts, cur_avg_time, pogreshnost * 100);
-        prev_avg_time=cur_avg_time;
-        counts++;
-        printf("Answer: %Lf\n\n", priblizhenie(x, n));
-        }
-return 0;
+        printf("Run %d: %f\n", i, time_of_run);
+    }
+    
+    printf("%Total: f\n", total_time);
+    printf("Avg_time: %f\n", total_time / runs);
+    printf("Answer: %Lf\n", priblizhenie(x, n));
+    return 0;
 }
