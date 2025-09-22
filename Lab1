@@ -40,11 +40,11 @@ int main() {
     double total_time = 0;
     for (int i = 1; i <= runs; i++) {
         double time_of_run = time_clock(x, n);
-        printf("Time of %i run: %f",i,time_of_run);
+        printf("Time of %i run: %f\n",i,time_of_run);
         total_time += time_of_run;
     }
-    printf("Answer: %Lf\n", total_time);
-    printf("Avg time: %Lf\n, total_time/runs);
+    printf("Answer: %f\n", total_time);
+    printf("Avg time: %f\n", total_time/runs);
     printf("Answer: %Lf\n", priblizhenie(x, n));
     return 0;
 }
