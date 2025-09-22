@@ -43,7 +43,7 @@ int main() {
         printf("Time of %i run: %f\n",i,time_of_run);
         total_time += time_of_run;
     }
-    printf("Answer: %f\n", total_time);
+    printf("Total time: %f\n", total_time);
     printf("Avg time: %f\n", total_time/runs);
     printf("Answer: %Lf\n", priblizhenie(x, n));
     return 0;
